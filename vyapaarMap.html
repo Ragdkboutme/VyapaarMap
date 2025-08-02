@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VyapaarMap Plus - Empowering MSMEs Digitally</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: #0f0f23;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e8e8e8;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #00d4aa, #00b4d8, #0077b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Orbitron', 'Courier New', monospace;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+        }
+
+        .nav-links::-webkit-scrollbar {
+            height: 0;
+        }
+
+        .nav-links a {
+            color: #e8e8e8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-family: 'Roboto', sans-serif;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover {
+            background: linear-gradient(45deg, #00d4aa, #00b4d8);
+            color: #0f0f23;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e8e8e8;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%2300d4aa" fill-opacity="0.05"><circle cx="30" cy="30" r="2"/></g></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(0, 212, 170, 0.1) 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes slideInFromLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInFromRight {
+            0% {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Delhi-specific Hero Enhancements */
+        .delhi-badge {
+            background: linear-gradient(45deg, rgba(0, 212, 170, 0.2), rgba(0, 180, 216, 0.2));
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            margin-bottom: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(0, 212, 170, 0.3);
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.9rem;
+            color: #00d4aa;
+            animation: slideInFromRight 1s ease-out 0.1s both;
+        }
+
+        .location-icon {
+            font-size: 1.2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-5px);
+            }
+            60% {
+                transform: translateY(-3px);
+            }
+        }
+
+        .delhi-stats {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .quick-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(0, 212, 170, 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 212, 170, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .quick-stat:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 212, 170, 0.2);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+        }
+
+        .stat-num {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #00d4aa;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .stat-text {
+            font-size: 0.8rem;
+            color: #b8b8b8;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Delhi Landmarks Animation */
+        .delhi-landmarks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .landmark {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            animation: floatingElements 6s ease-in-out infinite;
+        }
+
+        .india-gate {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .red-fort {
+            top: 60%;
+            right: 15%;
+            animation-delay: 1.5s;
+        }
+
+        .lotus-temple {
+            bottom: 30%;
+            left: 15%;
+            animation-delay: 3s;
+        }
+
+        .connaught-place {
+            top: 40%;
+            right: 25%;
+            animation-delay: 4.5s;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #00d4aa, #00b4d8, #0077b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Orbitron', 'Courier New', monospace;
+            animation: slideInFromLeft 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            color: #b8b8b8;
+            font-family: 'Roboto', sans-serif;
+            animation: slideInFromRight 1s ease-out 0.2s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00d4aa, #00b4d8);
+            color: #0f0f23;
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(232, 232, 232, 0.1);
+            color: #e8e8e8;
+            border: 2px solid rgba(0, 212, 170, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 212, 170, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(45deg, #00d4aa, #00b4d8);
+            color: #0f0f23;
+            border-color: #00d4aa;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            padding: 4rem 2rem;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(0, 212, 170, 0.2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 212, 170, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #00d4aa, #00b4d8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Orbitron', 'Courier New', monospace;
+        }
+
+        .stat-icon-large {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .stat-detail {
+            font-size: 0.9rem;
+            color: #8a8a8a;
+            margin-top: 0.5rem;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Delhi Infographic Styles */
+        .delhi-infographic {
+            max-width: 1200px;
+            margin: 4rem auto 0;
+            text-align: center;
+            padding: 0 2rem;
+        }
+
+        .delhi-infographic h3 {
+            font-size: 2rem;
+            color: #e8e8e8;
+            margin-bottom: 2rem;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, #00d4aa, #00b4d8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .infographic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .info-item {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 212, 170, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 212, 170, 0.4);
+            box-shadow: 0 15px 30px rgba(0, 212, 170, 0.1);
+        }
+
+        .info-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .info-content h4 {
+            color: #00d4aa;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Feature Image Enhancements */
+        .feature-image {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            background: linear-gradient(45deg, rgba(0, 212, 170, 0.1), rgba(0, 180, 216, 0.1));
+        }
+
+        /* Success Stories Preview */
+        .success-preview {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 212, 170, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 212, 170, 0.2);
+        }
+
+        .success-preview h4 {
+            color: #00d4aa;
+            margin-bottom: 1rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .success-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .success-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.5rem 0;
+        }
+
+        .success-icon {
+            font-size: 1.2rem;
+        }
+
+        .success-text {
+            color: #b8b8b8;
+            font-size: 0.9rem;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Delhi Map Visual */
+        .delhi-map-visual {
+            background: rgba(0, 212, 170, 0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 212, 170, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .map-title {
+            color: #00d4aa;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .map-regions {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .region-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .region-item:hover {
+            transform: translateX(5px);
+        }
+
+        .region-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .region-dot.delhi {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        .region-dot.gurgaon {
+            background: linear-gradient(45deg, #00d4aa, #00b4d8);
+            box-shadow: 0 0 10px rgba(0, 212, 170, 0.5);
+        }
+
+        .region-dot.noida {
+            background: linear-gradient(45deg, #a8e6cf, #7fcdcd);
+            box-shadow: 0 0 10px rgba(168, 230, 207, 0.5);
+        }
+
+        .region-dot.faridabad {
+            background: linear-gradient(45deg, #ffd93d, #6bcf7f);
+            box-shadow: 0 0 10px rgba(255, 217, 61, 0.5);
+        }
+
+        .region-name {
+            color: #e8e8e8;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .region-count {
+            color: #b8b8b8;
+            font-size: 0.9rem;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Demo Visual Styles */
+        .demo-visual {
+            font-size: 1.5rem;
+            margin-top: 0.8rem;
+            padding: 0.5rem;
+            background: rgba(0, 212, 170, 0.1);
+            border-radius: 8px;
+            letter-spacing: 0.2rem;
+            opacity: 0.8;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #e8e8e8;
+            margin-bottom: 1rem;
+            font-family: 'Orbitron', 'Courier New', monospace;
+            background: linear-gradient(45deg, #00d4aa, #00b4d8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: #b8b8b8;
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 2.5rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 212, 170, 0.2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 212, 170, 0.2);
+            border-color: rgba(0, 212, 170, 0.4);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #00d4aa, #00b4d8);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #0f0f23;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #e8e8e8;
+            margin-bottom: 1rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .feature-card p {
+            color: #b8b8b8;
+            line-height: 1.7;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* MSME Info Section */
+        .msme-info {
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            color: #e8e8e8;
+            padding: 6rem 2rem;
+        }
+
+        .msme-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .msme-text h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #00d4aa, #00b4d8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Orbitron', 'Courier New', monospace;
+        }
+
+        .msme-text p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+            color: #b8b8b8;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .msme-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .msme-stat {
+            background: rgba(0, 212, 170, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 212, 170, 0.2);
+        }
+
+        .msme-stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #00d4aa;
+            font-family: 'Orbitron', 'Courier New', monospace;
+        }
+
+        .msme-stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            color: #b8b8b8;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Demo Flow Section */
+        .demo-flow {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+        }
+
+        .demo-steps {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            gap: 3rem;
+        }
+
+        .demo-step {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 2rem;
+            align-items: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(0, 212, 170, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .demo-step:hover {
+            border-color: rgba(0, 212, 170, 0.4);
+            transform: translateX(10px);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #00d4aa, #00b4d8);
+            color: #0f0f23;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            font-family: 'Orbitron', 'Courier New', monospace;
+        }
+
+        .step-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #e8e8e8;
+            margin-bottom: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .step-content p {
+            color: #b8b8b8;
+            font-size: 1.1rem;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1e293b;
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-content p {
+            opacity: 0.8;
+            margin-bottom: 2rem;
+        }
+
+        .footer-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .msme-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .demo-step {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .demo-step:hover {
+                transform: translateY(-5px);
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 250px;
+                text-align: center;
+            }
+        }
+
+        /* Enhanced Hover Effects */
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0, 212, 170, 0.1), rgba(0, 180, 216, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 20px;
+        }
+
+        .feature-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #00d4aa, #00b4d8);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #00b4d8, #0077b6);
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Floating Animation for Hero Elements */
+        @keyframes floatingElements {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+            66% {
+                transform: translateY(5px) rotate(-0.5deg);
+            }
+        }
+
+        /* Gradient Animation */
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Navbar Enhancement */
+        .nav-links a.active {
+            background: linear-gradient(45deg, #00d4aa, #00b4d8);
+            color: #0f0f23;
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+        }
+
+        /* Mobile Navigation */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #e8e8e8;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-nav {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 212, 170, 0.2);
+            padding: 1rem 0;
+        }
+
+        .mobile-nav.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-nav li {
+            padding: 0.5rem 2rem;
+        }
+
+        .mobile-nav a {
+            color: #e8e8e8;
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+            padding: 0.5rem 0;
+            font-family: 'Roboto', sans-serif;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-nav a:hover {
+            color: #00d4aa;
+        }
+
+        /* Add staggered animation delays */
+        .fade-in:nth-child(1) { animation-delay: 0.1s; }
+        .fade-in:nth-child(2) { animation-delay: 0.2s; }
+        .fade-in:nth-child(3) { animation-delay: 0.3s; }
+        .fade-in:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">VyapaarMap Plus</div>
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#marketplace">Marketplace</a></li>
+                <li><a href="#discovery">Discovery</a></li>
+                <li><a href="#partnerships">Network</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+            <div class="mobile-nav" id="mobileNav">
+                <ul>
+                    <li><a href="#home" onclick="closeMobileMenu()">Home</a></li>
+                    <li><a href="#features" onclick="closeMobileMenu()">Features</a></li>
+                    <li><a href="#demo" onclick="closeMobileMenu()">Demo</a></li>
+                    <li><a href="#about" onclick="closeMobileMenu()">About</a></li>
+                    <li><a href="#marketplace" onclick="closeMobileMenu()">Marketplace</a></li>
+                    <li><a href="#discovery" onclick="closeMobileMenu()">Discovery</a></li>
+                    <li><a href="#training" onclick="closeMobileMenu()">Training</a></li>
+                    <li><a href="#partnerships" onclick="closeMobileMenu()">Network</a></li>
+                    <li><a href="#success-stories" onclick="closeMobileMenu()">Stories</a></li>
+                    <li><a href="#contact" onclick="closeMobileMenu()">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="delhi-badge">
+                <span class="location-icon">📍</span>
+                <span>Proudly Serving Delhi NCR • 2.5L+ MSMEs • Capital of Opportunities</span>
+            </div>
+            <h1>Empowering Delhi's MSMEs with Digital Excellence</h1>
+            <p>Transform your small business in Delhi NCR into a digital powerhouse with our visual marketplace and hyperlocal discovery platform. Connect with 25+ lakh MSMEs across the National Capital Territory!</p>
+            <div class="delhi-stats">
+                <div class="quick-stat">
+                    <div class="stat-icon">🏪</div>
+                    <div class="stat-info">
+                        <div class="stat-num">2.5L+</div>
+                        <div class="stat-text">MSMEs in Delhi</div>
+                    </div>
+                </div>
+                <div class="quick-stat">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <div class="stat-num">15L+</div>
+                        <div class="stat-text">People Employed</div>
+                    </div>
+                </div>
+                <div class="quick-stat">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <div class="stat-num">₹2.8L Cr</div>
+                        <div class="stat-text">Economic Output</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cta-buttons">
+                <a href="#demo" class="btn btn-primary">Start Your Delhi Journey</a>
+                <a href="#features" class="btn btn-secondary">Explore Features</a>
+            </div>
+        </div>
+        
+        <!-- Delhi Landmarks Illustration -->
+        <div class="delhi-landmarks">
+            <div class="landmark india-gate">🏛️</div>
+            <div class="landmark red-fort">🏰</div>
+            <div class="landmark lotus-temple">🪷</div>
+            <div class="landmark connaught-place">🏢</div>
+        </div>
+    </section>
+
+    <!-- Stats Section with Delhi Focus -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-card fade-in">
+                <div class="stat-icon-large">🏪</div>
+                <div class="stat-number">2.5L</div>
+                <div class="stat-label">MSMEs in Delhi NCR</div>
+                <div class="stat-detail">Across manufacturing, trading & services</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-icon-large">👥</div>
+                <div class="stat-number">15L</div>
+                <div class="stat-label">People Employed</div>
+                <div class="stat-detail">Direct & indirect employment generation</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-icon-large">💰</div>
+                <div class="stat-number">35%</div>
+                <div class="stat-label">of Delhi's GDP</div>
+                <div class="stat-detail">Major economic contribution</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-icon-large">📈</div>
+                <div class="stat-number">₹2.8L Cr</div>
+                <div class="stat-label">Annual Turnover</div>
+                <div class="stat-detail">Combined economic output</div>
+            </div>
+        </div>
+        
+        <!-- Delhi MSME Infographic -->
+        <div class="delhi-infographic">
+            <h3>Delhi MSME Ecosystem at a Glance</h3>
+            <div class="infographic-grid">
+                <div class="info-item">
+                    <div class="info-icon">🏭</div>
+                    <div class="info-content">
+                        <h4>Manufacturing Hubs</h4>
+                        <p>Narela, Bawana, Okhla Industrial Areas</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">🛍️</div>
+                    <div class="info-content">
+                        <h4>Trading Centers</h4>
+                        <p>Chandni Chowk, Sadar Bazaar, Karol Bagh</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">💼</div>
+                    <div class="info-content">
+                        <h4>Service Clusters</h4>
+                        <p>Connaught Place, Nehru Place, Gurgaon</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">🎯</div>
+                    <div class="info-content">
+                        <h4>Key Industries</h4>
+                        <p>Textiles, Electronics, Food Processing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>Comprehensive Digital Solutions</h2>
+            <p>Everything your MSME needs to thrive in the digital economy, designed with simplicity and effectiveness in mind</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-image">
+                    <div class="msme-illustration">🏪📱💻</div>
+                </div>
+                <div class="feature-icon">🏪</div>
+                <h3>Visual Storefront Builder</h3>
+                <p>Create stunning digital storefronts in minutes with our intuitive drag-and-drop interface. Upload images, set prices, and showcase your products in Hindi and regional languages popular in Delhi NCR.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-image">
+                    <div class="msme-illustration">🗺️📍🔍</div>
+                </div>
+                <div class="feature-icon">🗺️</div>
+                <h3>Delhi Hyperlocal Discovery</h3>
+                <p>Get discovered by customers across Delhi, Gurgaon, Noida, and Faridabad through our interactive map. Buyers can search by locality - from Chandni Chowk to Cyber City.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-image">
+                    <div class="msme-illustration">📚🎯📹</div>
+                </div>
+                <div class="feature-icon">🎯</div>
+                <h3>Hindi Training Toolkit</h3>
+                <p>Step-by-step guides, explainer videos in Hindi and Punjabi. Learn digital marketing with culturally relevant content designed for Delhi's diverse business community.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-image">
+                    <div class="msme-illustration">📱💬🛒</div>
+                </div>
+                <div class="feature-icon">📱</div>
+                <h3>WhatsApp Delhi Connect</h3>
+                <p>Customers can directly contact you through WhatsApp Business. Seamless integration for order management across Delhi NCR's multilingual customer base.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-image">
+                    <div class="msme-illustration">🏆✅⭐</div>
+                </div>
+                <div class="feature-icon">🏆</div>
+                <h3>Delhi Trust Badges</h3>
+                <p>Build credibility with digital trust badges. Show customers your commitment to quality service - essential for Delhi's competitive marketplace environment.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-image">
+                    <div class="msme-illustration">🤝🏢🌐</div>
+                </div>
+                <div class="feature-icon">🤝</div>
+                <h3>NCR Business Network</h3>
+                <p>Connect with MSMEs across Delhi NCR for B2B partnerships. From Karol Bagh traders to Gurgaon tech services - build your business ecosystem.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- MSME Information Section -->
+    <section class="msme-info" id="about">
+        <div class="msme-content">
+            <div class="msme-text">
+                <h2>Delhi: The MSME Capital of North India</h2>
+                <p>Delhi NCR hosts over 2.5 lakh MSMEs, making it one of India's largest MSME ecosystems. From traditional markets in Old Delhi to modern industrial complexes in Gurgaon and Noida, our platform serves the entire spectrum.</p>
+                <p>Despite their crucial role in Delhi's economy, many MSMEs struggle with digital adoption due to language barriers and technical complexity. VyapaarMap Plus bridges this gap with Hindi-first, culturally relevant digital tools.</p>
+                <p>Our platform understands the unique challenges of Delhi's diverse business landscape - from Punjabi traders in Karol Bagh to tech startups in Cyber Hub.</p>
+                
+                <!-- Delhi MSME Success Stories Preview -->
+                <div class="success-preview">
+                    <h4>🎯 Delhi Success Stories</h4>
+                    <div class="success-items">
+                        <div class="success-item">
+                            <span class="success-icon">👨‍💼</span>
+                            <span class="success-text">Ramesh Electronics, Lajpat Nagar - 300% online orders</span>
+                        </div>
+                        <div class="success-item">
+                            <span class="success-icon">👩‍💼</span>
+                            <span class="success-text">Priya Fashions, Janpath - Expanded across NCR</span>
+                        </div>
+                        <div class="success-item">
+                            <span class="success-icon">👨‍🍳</span>
+                            <span class="success-text">Sharma Caterers, Rohini - 5x customer base</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="msme-stats">
+                <div class="delhi-map-visual">
+                    <div class="map-title">Delhi NCR MSME Distribution</div>
+                    <div class="map-regions">
+                        <div class="region-item">
+                            <div class="region-dot delhi"></div>
+                            <div class="region-info">
+                                <div class="region-name">Central Delhi</div>
+                                <div class="region-count">45,000 MSMEs</div>
+                            </div>
+                        </div>
+                        <div class="region-item">
+                            <div class="region-dot gurgaon"></div>
+                            <div class="region-info">
+                                <div class="region-name">Gurgaon</div>
+                                <div class="region-count">65,000 MSMEs</div>
+                            </div>
+                        </div>
+                        <div class="region-item">
+                            <div class="region-dot noida"></div>
+                            <div class="region-info">
+                                <div class="region-name">Noida</div>
+                                <div class="region-count">55,000 MSMEs</div>
+                            </div>
+                        </div>
+                        <div class="region-item">
+                            <div class="region-dot faridabad"></div>
+                            <div class="region-info">
+                                <div class="region-name">Faridabad</div>
+                                <div class="region-count">35,000 MSMEs</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="traditional-stats">
+                    <div class="msme-stat">
+                        <div class="msme-stat-number">99.5%</div>
+                        <div class="msme-stat-label">of Delhi Enterprises</div>
+                    </div>
+                    <div class="msme-stat">
+                        <div class="msme-stat-number">40%</div>
+                        <div class="msme-stat-label">Manufacturing Output</div>
+                    </div>
+                    <div class="msme-stat">
+                        <div class="msme-stat-number">45%</div>
+                        <div class="msme-stat-label">Employment Generation</div>
+                    </div>
+                    <div class="msme-stat">
+                        <div class="msme-stat-number">₹5 Cr</div>
+                        <div class="msme-stat-label">Max Investment Limit</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Flow Section -->
+    <section class="demo-flow" id="demo">
+        <div class="section-title">
+            <h2>See VyapaarMap Plus in Action</h2>
+            <p>Experience how easy it is to transform your business digitally with our step-by-step demo flow</p>
+        </div>
+        <div class="demo-steps">
+            <div class="demo-step fade-in">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Delhi MSME Registration</h3>
+                    <p>Sign up using your mobile number, choose Hindi/Punjabi language preference, and join 2.5L+ Delhi MSMEs already using our platform across NCR.</p>
+                    <div class="demo-visual">📱➡️🏪➡️📍</div>
+                </div>
+            </div>
+            <div class="demo-step fade-in">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Create Your Delhi Storefront</h3>
+                    <p>Upload product photos, add descriptions in Hindi/English, set competitive prices for Delhi market, and watch your professional storefront come to life instantly.</p>
+                    <div class="demo-visual">📸➡️💰➡️🎨</div>
+                </div>
+            </div>
+            <div class="demo-step fade-in">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Access Delhi-Focused Training</h3>
+                    <p>Learn digital marketing through Hindi video tutorials, business growth strategies for Delhi market, and quick-start modules designed for NCR entrepreneurs.</p>
+                    <div class="demo-visual">📚➡️🎥➡️📈</div>
+                </div>
+            </div>
+            <div class="demo-step fade-in">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Get Discovered Across NCR</h3>
+                    <p>Appear on Delhi NCR discovery map where customers from Gurgaon to Noida can find your business, filter by locality, and connect directly.</p>
+                    <div class="demo-visual">🗺️➡️🔍➡️🤝</div>
+                </div>
+            </div>
+            <div class="demo-step fade-in">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h3>Share Across Delhi Markets</h3>
+                    <p>Generate QR codes for your shop in Chandni Chowk or Karol Bagh, earn trust badges, and boost credibility in Delhi's competitive marketplace.</p>
+                    <div class="demo-visual">📱➡️🏆➡️⭐</div>
+                </div>
+            </div>
+            <div class="demo-step fade-in">
+                <div class="step-number">6</div>
+                <div class="step-content">
+                    <h3>Connect with NCR Network</h3>
+                    <p>Discover nearby businesses from Delhi to Faridabad for partnerships, collaborate on projects, and build a strong Delhi business community network.</p>
+                    <div class="demo-visual">🤝➡️🌐➡️📈</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="footer-content">
+            <h3>Ready to Transform Your Delhi Business?</h3>
+            <p>Join 2.5 lakh+ Delhi NCR MSMEs who are already growing their digital presence with VyapaarMap Plus</p>
+            <div class="footer-cta">
+                <a href="#demo" class="btn btn-primary">Start Your Delhi Journey</a>
+                <a href="#features" class="btn btn-secondary">Explore Features</a>
+            </div>
+            
+            <div class="delhi-footer-info">
+                <div class="delhi-contact-info">
+                    <div class="contact-item">
+                        <span class="contact-icon">🏢</span>
+                        <span class="contact-text">Delhi Office: Connaught Place</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">📞</span>
+                        <span class="contact-text">Support: Hindi & English</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">🌐</span>
+                        <span class="contact-text">Coverage: Entire Delhi NCR</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">⏰</span>
+                        <span class="contact-text">Available: 24/7 Platform</span>
+                    </div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 2rem; opacity: 0.6;">© 2025 VyapaarMap Plus. Empowering Delhi NCR MSMEs with Digital Excellence. 🇮🇳</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Functions
+        function toggleMobileMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            mobileNav.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            mobileNav.classList.remove('active');
+        }
+
+        // Active Navigation Highlighting - Fixed
+        function updateActiveNav() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav a');
+            
+            let current = 'home'; // Default to home
+            
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                
+                // Check if section is in viewport (with some offset for header)
+                if (sectionTop <= 150 && sectionTop + sectionHeight > 150) {
+                    current = sectionId;
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                const href = link.getAttribute('href');
+                if (href === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Debounced scroll event listener for better performance
+        let scrollTimeout;
+        window.addEventListener('scroll', function() {
+            if (scrollTimeout) {
+                clearTimeout(scrollTimeout);
+            }
+            scrollTimeout = setTimeout(updateActiveNav, 10);
+        });
+
+        // Enhanced smooth scrolling with proper offset
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const target = document.getElementById(targetId);
+                
+                if (target) {
+                    const headerHeight = document.querySelector('.header').offsetHeight;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Update active state immediately
+                    setTimeout(() => {
+                        document.querySelectorAll('.nav-links a, .mobile-nav a').forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                    }, 100);
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Counter animation for stats
+        function animateCounter(element, target, duration = 2000) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(start);
+                }
+            }, 16);
+        }
+
+        // Animate stats when they come into view
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const number = entry.target.querySelector('.stat-number');
+                    const text = number.textContent;
+                    if (text.includes('Cr')) {
+                        const value = parseFloat(text) * 10000000;
+                        animateCounter(number, value);
+                    } else if (text.includes('%')) {
+                        const value = parseInt(text);
+                        animateCounter(number, value);
+                    }
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.stat-card').forEach(card => {
+            statsObserver.observe(card);
+        });
+    </script>
+</body>
+</html>
